@@ -11,20 +11,90 @@
         //var arrClass=[];
         var obj={};
 
+
+        var createClass=function(ID){
+            var nclass={};
+            if(ID==null) {
+                nclass.Name="";
+                nclass.Properties=[];
+            }
+            else {
+                var obj=FormService.getObject(ID);
+                angular.copy(obj,nclass);
+            }
+
+
+            return nclass;
+        }
+        var arr=FormService.getObjects();
+
+        var searchClassByName=function(name){
+            var classes=FormService.getObjects();
+            var found=null;
+            angular.forEach(classes,function(sclass){
+                if(sclass.Name.toUpperCase()==name.toUpperCase()) {
+                    found=sclass;
+                }
+            });
+            return found;
+        }
+
+        var removeClass=function(ID){
+
+            var obj=FormService.getObject(ID);
+
+            var index=arr.indexOf(obj);
+
+            arr.splice(index,1);
+            ToasterService.notify('class deleted successfully.');
+        }
+
+
         return{
-            CreateClass:function(){
-               obj={};
-                obj.Name="";
-                obj.Properties=[];
-               return obj;
+            createClass:function(ID){
+                return createClass(ID);
             },
-            Save:function(object){
-                var arr=FormService.getObjects();
-                arr.push(object);
-                ToasterService.notify('class added successfully.');
+            save:function(object){
+
+                if(object.ID==null)
+                {
+
+                    object.ID=arr.length+1;
+                    arr.push(object);
+                    ToasterService.notify('class added successfully.');
+                }
+                else
+                {
+                    var obj=FormService.getObject(object.ID);
+                    var searchedObject=searchClassByName(object.Name);
+                    if(searchedObject!=null && obj.ID!=searchedObject.ID){
+                            ToasterService.notifyError('class with same exists.please use another name.');
+                        return;
+                    }
+                    var index=arr.indexOf(obj);
+                    arr[index]=object;
+                    ToasterService.notify('class updated successfully.');
+                }
+
                 object=null;
             },
-            CreateProperty:function(){
+            removeClass:function(ID){
+                    removeClass(ID);
+            },
+            searchClassByName:function(name){
+                    return searchClassByName(name);
+            },
+            searchClassByID:function(ID){
+                var classes=FormService.getObjects();
+                var found=null;
+                angular.forEach(classes,function(sclass){
+                    if(sclass.ID==ID) {
+                        found=sclass;
+                    }
+                });
+                return found;
+            },
+            createProperty:function(){
                     var Property={};
                 return Property;
             },
@@ -55,9 +125,6 @@
                 });
                 return found;
             }
-            /*SaveProperty:function(prop){
-               // obj.Property.push(prop);
-            }*/
         }
 
     }]);

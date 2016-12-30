@@ -10,9 +10,12 @@
         return{
             restrict:'E',
             templateUrl:'app/views/CustomTable.html',
-            scope:{
-                model:"=data"
-            }
+            /*scope:{
+                modal:"=data",
+            },
+            link:function(scope,element,attrs){
+
+            }*/
         }
 
     });

@@ -6,19 +6,30 @@
 
     var app=angular.module('myApp');
 
-    app.controller('classController',['$scope','$window','ngDialog','ClassService','ToasterService',function($scope,$window,ngDialog,ClassService,ToasterService){
+    app.controller('classController',['$scope','$window','ngDialog','ClassService','FormService','ToasterService',function($scope,$window,ngDialog,ClassService,FormService,ToasterService){
 
 
-       // $window.alert('Tets');
-        $scope.class=ClassService.CreateClass();
-        $scope.Prop=ClassService.CreateProperty();
-     //   $scope.class=ClassService.CreateClass();
+       //initial data to show......
 
-        $scope.submit=function(){
-              ClassService.Save($scope.class);
-    }
+            $scope.Prop=ClassService.createProperty();
+
+        //end of initial data to show......
 
 
+
+        //Class Code
+
+            //Save Class
+           /* $scope.submit=function(){
+                  ClassService.save($scope.class);
+            };*/
+            //end of Save Class
+
+
+        //end of class code
+
+
+        // Property  add delete and edit Code
         $scope.ButtonTitle="Add";
         $scope.isEdit=false;
 
@@ -102,6 +113,8 @@
             }
 
         }
+
+        // End of Property  add delete and edit Code
 
     }]);
 })();

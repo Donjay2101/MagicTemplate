@@ -5,10 +5,10 @@
     "use strict";
     var myApp=angular.module('myApp');
 
-    myApp.factory('dialogService',['$scope','ngDialog',function($scope,ngDialog){
+    myApp.factory('dialogService',['ngDialog',function(ngDialog){
 
 
-        var propertyTypes=[
+      /*  var propertyTypes=[
             {"Name":"Double","Value":"double"},
             {"Name":"Float","Value":"float"},
             {"Name":"Int","Value":"int"},
@@ -16,22 +16,24 @@
         ];
         $scope.PropertyTypes=propertyTypes;
         $scope.Test="Test";
-        console.log($scope.Test);
-       var dialogOpen=function(templateUrl){
+        console.log($scope.Test);*/
+       var dialogOpen=function(templateUrl,scope){
            ngDialog.open({
                template: templateUrl,
                className: 'ngdialog-theme-default',
                cache:false,
-               scope:$scope
+               scope:scope,
+               height:530,
+               width:800
            });
            // example on checking whether created `new_dialog` is open
        }
 
+
         return{
-            Open:function(Url){
-                dialogOpen(Url);
-            },
-            PropertyTypes:propertyTypes
+            popup:function(Url,scope){
+                dialogOpen(Url,scope);
+            }
         }
     }])
 

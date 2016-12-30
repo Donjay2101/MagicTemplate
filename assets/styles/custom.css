@@ -3623,3 +3623,10 @@ ul.verticle_bars li {
   margin: 0 auto;
   left: 50%;
 }
+
+.tool-button{
+  border: none;
+  background: none;
+  color: #c5c7cc;
+  padding-top: 6px;
+}
