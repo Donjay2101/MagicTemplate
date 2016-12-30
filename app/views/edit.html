@@ -7,16 +7,61 @@
                </div>
             </div>
             <hr class="separator"/>
-                    <form  class="form-horizontal form-label-left">
-                        <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ClassName">Class Name</label>
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="text" id="txtClassName" name="ClassName"  placeholder="Enter class name..." class="form-control col-md-7 col-xs-12">
+                    <form  class="form-horizontal form-label-left" novalidate name="editForm">
+                        <div class="row">
+                            <div class="col-md-9 col-sm-9 col-xs-9 col-md-offset-4">
+                                <div class="form-group" ng-class="{'has-error':editForm.ClassName.$invalid}">
+                                        <label class="control-label col-md-5 col-sm-5 col-xs-12" for="ClassName">Class Name</label>
+                                        <div class="col-md-5 col-sm-5 col-xs-10">
+                                            <input type="text" class="form-control" id="txtClassName"
+                                                   ng-model="class.Name"  name="ClassName"  placeholder="Enter class name..." required />
+                                        </div>
+                                        <div class="col-md-2 col-sm-2 col-xs-2">
+                                            <span ng-show="editForm.ClassName.$error.required" class="help-block">*</span>
+                                        </div>
+                                </div>
                             </div>
                         </div>
+                        <fieldset class="custom-fieldset">
+                            <legend>Properties</legend>
+                            <div class="row">
+                                <div class="col-md-5 col-sm-5 col-xs-12">
+                                    <div class="form-group" ng-class="{'has-error':editForm.PropertyName.$invalid}">
+                                        <label class="control-label col-md-4 col-sm-4 col-xs-12" for="PropertyName">Name</label>
+                                        <div class="col-md-7 col-sm-7 col-xs-12">
+                                            <input type="text"  id="txtProperty" name="PropertyName"  required ng-model="Prop.Name" placeholder="enter property name..." class="form-control" />
+                                        </div>
+                                        <div class="col-md-1 col-sm-1 col-xs-12">
+                                            <span ng-show="editForm.PropertyName.$error.required" class="help-block">*</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 col-sm-5 col-xs-12 text-left">
+                                    <div class="form-group" ng-class="{'has-error':editForm.PropertyType.$invalid}">
+
+                                        <label class="control-label col-md-4 col-sm-4 col-xs-12" for="PropertyType">Type</label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <select class="form-control" ng-model="Prop.Type" name="PropertyType" required ng-options="Type.Value as Type.Name for Type in PropertyTypes" class="form-control">
+                                                <option value="">select--</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-1 col-sm-1 col-xs-12">
+                                            <span ng-show="editForm.PropertyType.$error.required" class="help-block">*</span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-2 col-xs-12 text-right">
+                                    <input type="button" value="{{ButtonTitle}}" ng-click="addProperty(editForm.$valid)" class="btn btn-success btn-xm"/>
+                                </div>
+
+                            </div>
+                        </fieldset>
+
                         <hr class="separator"/>
+
                         <div class="form-group edit-form">
-                            <table class="table table-striped">
+                            <table class="table table-hover">
                                 <thead>
                                     <tr>
                                         <th width="40%" style="text-align:center;">Property Name</th>
@@ -25,17 +70,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                        <tr>
-                                            <td><input type="text"  id="txtProperty" placeholder="enter property name..." class="form-control col-md-4 col-xs-12" /></td>
-                                            <td>
-                                                    <select ng-model="selected" ng-options="propertyType as  propertyType.Name for propertyType in PropertyTypes track by propertyType.Value" class="form-control col-md-4 col-xs-12">
-                                                                <option value="">select--</option>
-                                                    </select>
-                                            </td>
-                                            <td style="text-align:center">
-                                                <button type="submit" class="btn btn-sm">Add</button>
-                                            </td>
-                                        </tr>
+                                  <tr ng-repeat="prop in class.Properties">
+                                        <td>{{prop.Name}}</td>
+                                      <td>{{prop.Type}}</td>
+                                      <td>
+                                          <button type="submit" class="btn btn-link" style="margin-right:0" ng-click="editProperty(prop.ID)">Edit</button>
+                                         <span>|</span>
+                                          <button type="submit" class="btn btn-link" ng-click="removeProperty(prop.ID)">Delete</button>
+                                      </td>
+                                  </tr>
                                 </tbody>
                             </table>
 

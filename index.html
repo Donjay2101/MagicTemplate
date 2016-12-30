@@ -7,20 +7,18 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="fragment" content="!">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <base href="./">
-    <title>Gentelella Alela! | </title>
+    <title>Magic Template! </title>
 
     <!-- Bootstrap -->
     <link href="./vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="./vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-
     <link href="./vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
     <link href="./assets/styles/ngDialog.css" rel="stylesheet">
     <link href="./assets/styles/ngDialog-theme-default.css" rel="stylesheet">
-
-
+    <link href="./assets/styles/toaster.css" rel="stylesheet">
     <!-- Custom Theme Style -->
     <link href="./assets/styles/custom.css" rel="stylesheet">
 </head>
@@ -83,13 +81,14 @@
         </div>
 
         <!-- /top navigation -->
-
+        <div>
+            <toaster-container toaster-options="{'time-out': 3000,'close-button':true}"></toaster-container>
+        </div>
         <!-- page content -->
         <div class="right_col" role="main">
             <div ng-view>
 
             </div>
-
         </div>
         <!-- /page content -->
 
@@ -127,14 +126,23 @@
 <script src="Vendors/angular/angular-route.js"></script>
 <script src="Vendors/angular/ngDialog.min.js"></script>
 <script src="Vendors/angular/angular-filter.min.js"></script>
+<script src="Vendors/angular/angular-animate.min.js"></script>
+<script src="Vendors/angular/toaster.js"></script>
+
+
+
 <!--  angular main Scripts-->
 
 <!--  angular custom Scripts-->
 <script src="app/app.js"></script>
 <script src="app/controllers/homeController.js"></script>
 <script src="app/controllers/FormsController.js"></script>
+<script src="app/controllers/ClassController.js"></script>
 <script src="app/directives/CustomTableView.js"></script>
 <script src="app/services/dialogService.js"></script>
+<script src="app/services/FormService.js"></script>
+<script src="app/services/ClassService.js"></script>
+<script src="app/services/ToasterService.js"></script>
 
 <!--  angular custom Scripts-->
 <!--  angular Scripts-->

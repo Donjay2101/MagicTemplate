@@ -12,11 +12,12 @@
 
 
   alternative method
-   <div class="row" ng-repeat="items in alphabet" ng-if="$index%3==0">
-    <div class="col-md-4" ng-repeat="item in [$index,$index+1,$index+2]" ng-if="alphabet[item]!=null">
-        <custom-Table data="alphabet[item]">
+   <div class="row" ng-repeat="items in objects|filter:search" ng-if="$index%3==0">
+        <div class="col-md-4" ng-repeat="item in [$index,$index+1,$index+2]|filter:search" ng-if="objects[item]!=null">
+            <custom-Table data="objects[item]">
 
-        </custom-Table>
+            </custom-Table>
+        </div>
     </div>
 ---------------------------------------------------------------------------------------------------------------------------
 -->
@@ -26,7 +27,7 @@
     </div>
     <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
         <div class="input-group">
-            <input type="text" class="form-control" ng-model="searchText" placeholder="Search for...">
+            <input type="text" class="form-control" ng-model="search.Name" placeholder="Search for...">
                     <span class="input-group-btn">
                       <button class="btn btn-default" style="height:30px;" type="button">Go!</button>
                     </span>
@@ -35,11 +36,12 @@
 </div>
 <hr/>
 <div class="row table_form" >
-    <div class="row" ng-repeat="items in alphabet" ng-if="$index%3==0">
-        <div class="col-md-4" ng-repeat="item in [$index,$index+1,$index+2]" ng-if="alphabet[item]!=null">
-            <custom-Table data="alphabet[item]">
+    <div class="row" ng-repeat="items in objects|groupBy:3">
+        <div class="col-md-4" ng-repeat="item in items|filter:search">
+            <custom-Table data="item">
 
             </custom-Table>
         </div>
     </div>
+
 </div>

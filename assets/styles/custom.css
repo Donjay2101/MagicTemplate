@@ -3197,7 +3197,7 @@ div[data-role="editor-toolbar"] {
 /** /Switchery **/
 /** Normalize.css **/
 fieldset {
-  border: none;
+/*  border: none;*/
   margin: 0;
   padding: 0; }
 
@@ -3569,6 +3569,7 @@ ul.verticle_bars li {
   max-height:600px;
   overflow-x:hidden;
   overflow-y:scroll;
+  margin:0;
 }
 
 
@@ -3579,13 +3580,46 @@ ul.verticle_bars li {
 
 }
 
-.table-striped>thead>tr>td{
+.table-hover{
+  background:white;
+  margin:0;
+}
+.table-hover thead>tr>th,td{
+  text-align: center;
+  padding:5px;
+}
+
+.table-hover tbody>tr>td{
+  text-align: center;
+  padding:0;
+}
+.table-striped tr>th{
   text-align: center;
 }
 
 .edit-form{
-  min-height: 300px;
-  max-height:300px;
+  min-height: 230px;
+  max-height:230px;
   overflow: scroll;
   overflow-x: hidden;
+  margin:0;
+}
+
+.custom-fieldset{
+  border: 1px solid silver;
+}
+.custom-fieldset >legend{
+  width: 85px;
+  font-size: 17px;
+  border: none;
+  color: inherit;
+  margin-left: 21px;
+  margin-bottom: 0;
+}
+
+
+.toast-top-center {
+  top: 12px;
+  margin: 0 auto;
+  left: 50%;
 }

@@ -2,7 +2,19 @@
  * Created by DMehta on 12/24/2016.
  */
 (function(){
-    var myApp=angular.module('myApp',['ngRoute','ngDialog','angular.filter']);
+    var myApp=angular.module('myApp',['ngRoute','ngDialog','angular.filter','ngAnimate','toaster']);
+
+
+
+    myApp.config(['$provide',function($provide){
+
+        $provide.decorator('$exceptionHandler',['$delegate',function($delegate){
+            return function(exception,cause){
+                $delegate(exception,cause);
+                alert(exception.message);
+            };
+        }]);
+    }]);
     myApp.config(['$routeProvider','$locationProvider','ngDialogProvider',function($routeProvider,$locationProvider,ngDialogProvider){
 
         //$locationProvider.html5Mode(false);

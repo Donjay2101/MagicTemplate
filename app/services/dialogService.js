@@ -18,7 +18,6 @@
         $scope.Test="Test";
         console.log($scope.Test);
        var dialogOpen=function(templateUrl){
-
            ngDialog.open({
                template: templateUrl,
                className: 'ngdialog-theme-default',

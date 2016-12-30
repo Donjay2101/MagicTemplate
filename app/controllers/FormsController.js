@@ -5,9 +5,7 @@
 (function(){
         "use strict";
         var myApp=angular.module("myApp");
-    myApp.controller('formController',['$scope','ngDialog',function($scope,ngDialog){
-
-
+    myApp.controller('formController',['$scope','$window','ngDialog','FormService','ClassService',function($scope,$window,ngDialog,FormService,ClassService){
 
 
         var propertyTypes=[
@@ -16,20 +14,31 @@
             {"Name":"Int","Value":"int"},
             {"Name":"String","Value":"string"},
         ];
+
         $scope.PropertyTypes=propertyTypes;
 
-        $scope.Test="test";
+
+
+        /*$scope.Test="test";
         $scope.alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];*/
+
+        $scope.objects=FormService.getObjects();
+
         $scope.Open=function(){
             ngDialog.open({
                 template: 'app/views/edit.html',
                 className: 'ngdialog-theme-default',
                 cache:false,
                 scope:$scope,
+                controller:'classController',
+                controllerAs:'class',
                 height:530,
-                width:750
+                width:800
             });
         };
+
+
+
     }]);
 })();
