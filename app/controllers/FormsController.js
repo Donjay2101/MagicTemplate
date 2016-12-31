@@ -59,67 +59,25 @@
             $scope.message="you are about to delete a property.are you sure?";
                 var confirmDialog=ngDialog.openConfirm({
                     template:'app/views/confirmDialog.html',
-                    className:'ngdialog-theme-default',
-                    cache:false,
                     scope:$scope,
                     controllerAs:'class',
                 }).then(function(){
-                var properties=$scope.class.Properties;
-                var prop=ClassService.searchPropertyByID(properties,ID);
-                $scope.class.Properties.splice($scope.class.Properties.indexOf(prop),1);
+                    ClassService.removeProperty($scope.class,ID);
             },function(reason){
                 //at the time of cancellation
             });
         }
 
         $scope.addProperty=function(isValid){
-            var temp={};
-
             if(isValid)
             {
+                ClassService.createProperty($scope.class,$scope.Prop);
 
-                var properties=$scope.class.Properties;
-                angular.copy($scope.Prop,temp);
-                var getProp=ClassService.searchPropertyByName(properties,temp.Name);
-
-                if($scope.isEdit)
-                {
-
-                    var _oldprop=ClassService.searchPropertyByID(properties,$scope.Prop.ID);
-                    if(getProp!=null && getProp.ID!=_oldprop.ID)
-                    {
-                        ToasterService.notifyError('Property with  this name added already.');
-                        return;
-                    }
-                    var index=$scope.class.Properties.indexOf(_oldprop);
-                    $scope.class.Properties[index]=temp;
+                if($scope.isEdit){
                     $scope.isEdit=false;
                     $scope.ButtonTitle="Add";
                 }
-                else
-                {
-                    if(getProp!=null)
-                    {
-                        ToasterService.notifyError('Property with  this name added already.');
-                        return;
-                    }
-                    var ID=1;
-                    if($scope.class.Properties!=null)
-                    {
-                        ID=$scope.class.Properties.length+1
-                    }
-
-                    temp.ID=ID;
-                    $scope.class.Properties.push(temp);
-                    ToasterService.notify('property added successfully.');
-                }
-
-                $scope.Prop=null;
-
-                // $window.alert($scope.class.Name);
-
-                //  $window.alert('ee');
-                //ClassService.SaveProperty(prop);
+                $scope.Prop={ID:0,Name:"",Type:""};
             }
 
         }
@@ -138,7 +96,13 @@
         };
 
         $scope.saveClass=function(){
-            ClassService.save($scope.class);
+            if($scope.class.properties!=null && $scope.class.properties.length>0){
+                ClassService.save($scope.class);
+            }
+            else
+                ToasterService.notifyError("no properties defined for class");
+
+
         };
 
         $scope.removeClass=function(ID){

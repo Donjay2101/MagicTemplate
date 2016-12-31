@@ -26,6 +26,7 @@
         ngDialogProvider.setDefaults({
             className: 'ngdialog-theme-default',
             plain: false,
+            cache:false,
             showClose: true,
             closeByDocument: false,
             closeByEscape: true,

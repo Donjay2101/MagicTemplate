@@ -49,6 +49,70 @@
             ToasterService.notify('class deleted successfully.');
         }
 
+        var searchPropertyByID=function(properties,ID){
+            var found=null;
+            angular.forEach(properties,function(prop){
+                if(ID==prop.ID){
+                    found=prop;
+                }
+            });
+            return found;
+        }
+        var searchPropertyByName=function(properties,searchName){
+            var found=null;
+            angular.forEach(properties,function(prop){
+                if(searchName.toUpperCase()==prop.Name.toUpperCase()){
+                    found=prop;
+                }
+            });
+            return found;
+        }
+
+        var addProperty=function(nclass,property){
+            var properties=nclass.Properties;
+            var temp={};
+            angular.copy(property,temp);
+            var getProp=searchPropertyByName(properties,temp.Name);
+            if(getProp!=null && getProp.ID!=property.ID)
+            {
+                ToasterService.notifyError('Property with  this name added already.');
+                return;
+            }
+            if(property.ID!=null && property.ID !=0)
+            {
+                var prop=searchPropertyByID(nclass.Properties,property.ID);
+                if(prop!=null){
+                    var index=nclass.Properties.indexOf(prop);
+                    nclass.Properties[index]=property;
+                    /*prop=property;*/
+                }
+                else{
+                    ToasterService.notifyError('Property not found.');
+                    return;
+                }
+            }
+            else {
+                var ID=1;
+                if(nclass.Properties.length>0 && nclass.Properties!=null)
+                {
+                    ID=nclass.Properties.length+1;
+                }
+
+                temp.ID=ID;
+                nclass.Properties.push(temp);
+                ToasterService.notify('property added successfully.');
+
+            }
+
+
+        }
+
+        var removeProperty=function(nclass,ID){
+            var properties=nclass.Properties;
+            var prop=searchPropertyByID(properties,ID);
+            nclass.Properties.splice(nclass.Properties.indexOf(prop),1);
+        }
+
 
         return{
             createClass:function(ID){
@@ -94,9 +158,21 @@
                 });
                 return found;
             },
-            createProperty:function(){
+            createProperty:function(nclass,property){
+                if(property == null){
                     var Property={};
-                return Property;
+                    Property.ID=0;
+                    Property.Name="";
+                    Property.Type="";
+                    return Property;
+                }
+                else{
+                    addProperty(nclass,property);
+                }
+
+            },
+            removeProperty:function(nclass,ID){
+                removeProperty(nclass,ID);
             },
             searchPropertyInClass:function(properties,searchElement){
                 var found=null;
@@ -108,22 +184,10 @@
                 return found;
             },
             searchPropertyByName:function(properties,searchName){
-                var found=null;
-                angular.forEach(properties,function(prop){
-                    if(searchName.toUpperCase()==prop.Name.toUpperCase()){
-                        found=prop;
-                    }
-                });
-                return found;
+                return searchPropertyByName(properties,searchName);
             },
             searchPropertyByID:function(properties,ID){
-                var found=null;
-                angular.forEach(properties,function(prop){
-                    if(ID==prop.ID){
-                        found=prop;
-                    }
-                });
-                return found;
+                    return searchPropertyByID(properties,ID)
             }
         }
 
