@@ -1,0 +1,25 @@
+{
+  "name": "magictemplate",
+  "version": "1.0.0",
+  "description": "magic template",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Donjay2101/MagicTemplate.git"
+  },
+  "author": "me",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Donjay2101/MagicTemplate/issues"
+  },
+  "homepage": "https://github.com/Donjay2101/MagicTemplate#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "mongoose": "^4.7.5"
+  }
+}
