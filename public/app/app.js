@@ -11,6 +11,7 @@
         $provide.decorator('$exceptionHandler',['$delegate',function($delegate){
             return function(exception,cause){
                 $delegate(exception,cause);
+                console.log(cause);
                 alert(exception.message);
             };
         }]);

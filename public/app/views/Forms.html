@@ -37,9 +37,8 @@
 <hr/>
 <div class="row table_form" >
     <div class="row" ng-repeat="items in objects|groupBy:3">
-        <div class="col-md-4" ng-repeat="item in items|filter:search">
+        <div class="col-md-4" ng-repeat="item in items|filter:search ">
             <custom-Table>
-
             </custom-Table>
         </div>
     </div>

@@ -3,11 +3,13 @@
  */
 var express=require('express');
 var mongoose=require('mongoose');
+var  autoIncrement = require('mongoose-auto-increment');
 var bodyParser = require('body-parser');
 var database=require('./config/database');
 var port  	= process.env.PORT || 9080;
 
 mongoose.connect(database.Url);
+autoIncrement.initialize(mongoose);
 
 var app=express();
 

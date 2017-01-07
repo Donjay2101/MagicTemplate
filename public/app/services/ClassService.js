@@ -5,52 +5,85 @@
     "use strict";
 
     var app=angular.module('myApp');
+    function resourceErrorHandler(response) {
+        console.log('error'+response);
+    }
 
     app.factory('ClassService',['$resource','FormService','ToasterService',function($resource,FormService,ToasterService){
 
-        var ClassResource = $resource('/api/Classes', null,
+             var ClassResource = $resource('/api/Classes/:param/:By',null,
+                     {
+                         'update':{method:'PUT',isArray:true,interceptor : {responseError : resourceErrorHandler}},
+                         'save':   {method:'POST',isArray:true,interceptor : {responseError : resourceErrorHandler}},
+                         'delete':   {method:'DELETE',isArray:true,interceptor : {responseError : resourceErrorHandler}},
+                         'remove': {method:'DELETE',isArray:true,interceptor : {responseError : resourceErrorHandler}}
+
+                     });
+        /*,
             {
-                'update': { method: 'PUT' }
-            });
+                'get':    {method:'GET',params: {Id: '@id'},
+                    interceptor : {responseError : resourceErrorHandler}},
+                'update':    {method:'PUT',
+                    interceptor : {responseError : resourceErrorHandler}},
+                'save':   {method:'POST'},
+                'query':  {method:'GET',isArray:true,
+                    interceptor : {responseError : resourceErrorHandler}},
+                'remove': {method:'DELETE'},
+                'delete': {method:'DELETE'}
+            });*/
         //var arrClass=[];
-        var obj={};
+        //var obj={};
 
 
-        var createClass=function(ID){
+
+        var classes=ClassResource.query();
+        var getClass=function(ID,callback){
             var nclass={};
-            if(ID==null) {
-                nclass.Name="";
-                nclass.Properties=[];
-            }
-            else {
-                var obj=FormService.getObject(ID);
+            //var ID=ID+'?SearchBy="ID"';
+            var obj= ClassResource.get({param:ID,By:'ID'},function(){
                 angular.copy(obj,nclass);
-            }
+                callback(nclass);
+            });
+        }
 
-
+        var createClass=function(){
+            var nclass={};
+            nclass.Name="";
+            nclass.Properties=[];
             return nclass;
         }
-        var arr=FormService.getObjects();
 
-        var searchClassByName=function(name){
-            var classes=FormService.getObjects();
+
+        var searchClassByName=function(name,callback){
+           // var classes=FormService.getObjects();
             var found=null;
-            angular.forEach(classes,function(sclass){
+            //var name=name+'?SearchBy="Name"';
+          var s= ClassResource.get({param:name,By:'Name'},function(){
+               found=s;
+              callback(found);
+                console.log(found);
+           });
+           /* angular.forEach(classes,function(sclass){
                 if(sclass.Name.toUpperCase()==name.toUpperCase()) {
                     found=sclass;
                 }
             });
-            return found;
+            return found;*/
         }
 
-        var removeClass=function(ID){
+        var removeClass=function(ID,callback){
 
-            var obj=FormService.getObject(ID);
+            ClassResource.delete({param:ID},function(classes){
+                callback(classes);
+                ToasterService.notify('class deleted successfully.');
+            });
+
+           /* var obj=ClassResource.get(ID);''
 
             var index=arr.indexOf(obj);
 
-            arr.splice(index,1);
-            ToasterService.notify('class deleted successfully.');
+            arr.splice(index,1);*/
+
         }
 
         var searchPropertyByID=function(properties,ID){
@@ -120,37 +153,58 @@
 
         return{
             getClasses:function(){
-                return ClassResource.query();
+               // console.log();
+                return classes;
             },
-            createClass:function(ID){
-                return createClass(ID);
+            getClass:function(ID,callBack){
+                return getClass(ID,callBack);
             },
-            save:function(object){
-
-                if(object.ID==null)
-                {
-
-                    object.ID=arr.length+1;
-                    arr.push(object);
-                    ToasterService.notify('class added successfully.');
-                }
-                else
-                {
-                    var obj=FormService.getObject(object.ID);
-                    var searchedObject=searchClassByName(object.Name);
-                    if(searchedObject!=null && obj.ID!=searchedObject.ID){
-                            ToasterService.notifyError('class with same exists.please use another name.');
+            createClass:function(){
+                return createClass();
+            },
+            save:function(object,callback){
+                searchClassByName(object.Name,function(obj){
+                    console.log(obj);
+                    if(obj!=null && obj.ID!=undefined && obj.ID!=object.ID)
+                    {
+                        ToasterService.notifyError('class with same name already exist.use another one.');
                         return;
                     }
-                    var index=arr.indexOf(obj);
-                    arr[index]=object;
-                    ToasterService.notify('class updated successfully.');
-                }
 
-                object=null;
+                    if(object.ID==null)
+                    {
+                        ClassResource.save(object,function(classes){
+                            callback(classes);
+                            ToasterService.notify('class added successfully.');
+                        });
+                        //arr.push(object);
+                    }
+                    else
+                    {
+
+                        ClassResource.update(object,function(classes){
+                            callback(classes);
+                            ToasterService.notify('class updated successfully.');
+                        })
+                        //var obj=FormService.getObject(object.ID);
+                       /* var searchedObject=searchClassByName(object.Name);
+                        if(searchedObject!=null && obj.ID!=searchedObject.ID){
+                            ToasterService.notifyError('class with same exists.please use another name.');
+                            return;
+                        }
+                        var index=arr.indexOf(obj);
+                        arr[index]=object;*/
+
+                    }
+
+
+                });
+
+
+
             },
-            removeClass:function(ID){
-                    removeClass(ID);
+            removeClass:function(ID,callback){
+                    removeClass(ID,callback);
             },
             searchClassByName:function(name){
                     return searchClassByName(name);
