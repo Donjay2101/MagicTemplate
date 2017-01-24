@@ -9,7 +9,7 @@
         console.log('error'+response);
     }
 
-    app.factory('ClassService',['$resource','FormService','ToasterService',function($resource,FormService,ToasterService){
+    app.factory('ClassService',['$resource','ToasterService',function($resource,ToasterService){
 
              var ClassResource = $resource('/api/Classes/:param/:By',null,
                      {
@@ -19,30 +19,37 @@
                          'remove': {method:'DELETE',isArray:true,interceptor : {responseError : resourceErrorHandler}}
 
                      });
-        /*,
-            {
-                'get':    {method:'GET',params: {Id: '@id'},
-                    interceptor : {responseError : resourceErrorHandler}},
-                'update':    {method:'PUT',
-                    interceptor : {responseError : resourceErrorHandler}},
-                'save':   {method:'POST'},
-                'query':  {method:'GET',isArray:true,
-                    interceptor : {responseError : resourceErrorHandler}},
-                'remove': {method:'DELETE'},
-                'delete': {method:'DELETE'}
-            });*/
-        //var arrClass=[];
-        //var obj={};
-
 
 
         var classes=ClassResource.query();
+
+        var getProperties=function(callback){
+            var propArr=[{"Name":"Double","Value":"double"},
+                {"Name":"Float","Value":"float"},
+                {"Name":"Int","Value":"int"},
+                {"Name":"String","Value":"string"},];
+
+            classes=ClassResource.query(function(){
+                angular.forEach(classes,function(cls){
+                    var obj={"Name":cls.Name,"Value":cls.ID};
+                    propArr.push(obj);
+                });
+                callback(propArr);
+            });
+
+
+
+
+
+        }
+
         var getClass=function(ID,callback){
             var nclass={};
             //var ID=ID+'?SearchBy="ID"';
             var obj= ClassResource.get({param:ID,By:'ID'},function(){
                 angular.copy(obj,nclass);
                 callback(nclass);
+
             });
         }
 
@@ -78,11 +85,6 @@
                 ToasterService.notify('class deleted successfully.');
             });
 
-           /* var obj=ClassResource.get(ID);''
-
-            var index=arr.indexOf(obj);
-
-            arr.splice(index,1);*/
 
         }
 
@@ -120,7 +122,12 @@
                 var prop=searchPropertyByID(nclass.Properties,property.ID);
                 if(prop!=null){
                     var index=nclass.Properties.indexOf(prop);
-                    nclass.Properties[index]=property;
+
+                    setTypeName(temp,function(prop){
+                        nclass.Properties[index]=prop;
+
+                        ToasterService.notify('property edited successfully.');
+                    });
                     /*prop=property;*/
                 }
                 else{
@@ -136,12 +143,31 @@
                 }
 
                 temp.ID=ID;
-                nclass.Properties.push(temp);
-                ToasterService.notify('property added successfully.');
+
+
+                setTypeName(temp,function(prop){
+                    nclass.Properties.push(prop);
+                    ToasterService.notify('property added successfully.');
+                });
+
 
             }
 
 
+        }
+
+        var setTypeName=function(prop,callback){
+            var temp_prop;
+            //adding name of the property type
+            getProperties(function(properties){
+                angular.forEach(properties,function(property){
+                    if(property.Value==prop.Type){
+                        prop.TypeName=property.Name;
+                        temp_prop=prop;
+                    }
+                });
+                callback(temp_prop);
+            });
         }
 
         var removeProperty=function(nclass,ID){
@@ -185,6 +211,7 @@
                         ClassResource.update(object,function(classes){
                             callback(classes);
                             ToasterService.notify('class updated successfully.');
+
                         })
                         //var obj=FormService.getObject(object.ID);
                        /* var searchedObject=searchClassByName(object.Name);
@@ -225,6 +252,7 @@
                     Property.ID=0;
                     Property.Name="";
                     Property.Type="";
+                    Property.TypeName="";
                     return Property;
                 }
                 else{
@@ -249,6 +277,9 @@
             },
             searchPropertyByID:function(properties,ID){
                     return searchPropertyByID(properties,ID)
+            },
+            getProperties:function(callback){
+                getProperties(callback);
             }
         }
 

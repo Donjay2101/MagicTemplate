@@ -6,19 +6,15 @@
 
     var app=angular.module('myApp');
 
-    app.controller('classController',['$scope','$window','ngDialog','ClassService','FormService','ToasterService',function($scope,$window,ngDialog,ClassService,FormService,ToasterService){
+    app.controller('classController',['$scope','$window','ngDialog','ClassService','ToasterService',function($scope,$window,ngDialog,ClassService,ToasterService){
 
 
        //initial data to show......
-        var propertyTypes=[
-            {"Name":"Double","Value":"double"},
-            {"Name":"Float","Value":"float"},
-            {"Name":"Int","Value":"int"},
-            {"Name":"String","Value":"string"},
-        ];
 
 
-        $scope.PropertyTypes=propertyTypes;
+
+
+
 
         $scope.Prop=ClassService.createProperty();
 
@@ -105,24 +101,13 @@
             }
 
         }
-
         $scope.open=function(ID){
-            if(ID==undefined)
-            {
-                $scope.class=ClassService.createClass();
-                ngDialog.open({
-                    template: 'app/views/edit.html',
-                    className: 'ngdialog-theme-default',
-                    cache:false,
-                    scope:$scope,
-                    height:530,
-                    width:800
-                });
-            }
-            else
-            {
-                ClassService.getClass(ID,function(nClass){
-                    $scope.class=nClass;
+            ClassService.getProperties(function(arr){
+                // propertyTypes=arr;
+                $scope.PropertyTypes=arr;
+                if(ID==undefined)
+                {
+                    $scope.class=ClassService.createClass();
                     ngDialog.open({
                         template: 'app/views/edit.html',
                         className: 'ngdialog-theme-default',
@@ -131,19 +116,36 @@
                         height:530,
                         width:800
                     });
-                });
-            }
+                }
+                else
+                {
+                    ClassService.getClass(ID,function(nClass){
+                        $scope.class=nClass;
+                        ngDialog.open({
+                            template: 'app/views/edit.html',
+                            className: 'ngdialog-theme-default',
+                            cache:false,
+                            scope:$scope,
+                            height:530,
+                            width:800
+                        });
+                    });
+                }
+
+            });
+
+
 
 
             /*if(ID==undefined)
-            {
+             {
 
-            }
-            else
-            {
+             }
+             else
+             {
 
-            }
-*/
+             }
+             */
 
             //dialogService.open('app/views/edit.html',$scope);
 
@@ -153,8 +155,14 @@
             if($scope.class.Properties!=null && $scope.class.Properties.length>0){
 
                 ClassService.save($scope.class,function(classes){
+
+                    //add class to objects...
                     $scope.objects=classes;
-                   // $window.console.log($scope.objects);
+
+                    //add class to property types...
+                    ClassService.getProperties(function(arr){
+                        $scope.PropertyTypes=arr;
+                    });
                 });
             }
             else

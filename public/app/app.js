@@ -4,8 +4,6 @@
 (function(){
     var myApp=angular.module('myApp',['ngRoute','ngDialog','angular.filter','ngAnimate','toaster','ngResource']);
 
-
-
     myApp.config(['$provide',function($provide){
 
         $provide.decorator('$exceptionHandler',['$delegate',function($delegate){
@@ -16,7 +14,8 @@
             };
         }]);
     }]);
-    myApp.config(['$routeProvider','$locationProvider','ngDialogProvider',function($routeProvider,$locationProvider,ngDialogProvider){
+
+        myApp.config(['$routeProvider','$locationProvider','ngDialogProvider',function($routeProvider,$locationProvider,ngDialogProvider){
 
         //$locationProvider.html5Mode(false);
         $locationProvider.hashPrefix('');

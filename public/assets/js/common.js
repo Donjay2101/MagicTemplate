@@ -1,6 +1,27 @@
 /**
  * Created by DMehta on 12/24/2016.
  */
+$(document).ready(function(){
+    setContentBodyHeight();
+    $(window).resize(function(){
+        setContentBodyHeight();
+        //alert($(window).innerHeight());
+    });
+});
+
+function setContentBodyHeight()
+{
+    var height=$(window).innerHeight();
+    console.log(height);
+    if(height<800)
+    {
+        $('#container').css('min-height','719px');
+    }
+    if(height>=800 && height<1100){
+        $('#container').css('min-height','758px');
+        console.log(height);
+    }
+}
 
 $(document).on('click','.collapse-link',function() {
     debugger;
